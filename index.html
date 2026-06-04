@@ -408,176 +408,217 @@ footer {
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: rgba(5,3,1,0.92);
-  backdrop-filter: blur(6px);
+  background: rgba(5,3,1,0.88);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease;
+  padding: 16px;
 }
 .book-overlay.open { opacity: 1; pointer-events: all; }
 
-.book-modal {
+/* ── BOOK PANEL MODAL (matches kingdom modal style) ── */
+.book-panel-modal {
   position: relative;
-  width: min(2500px, 85vw);
+  width: min(860px, 96vw);
+  max-height: 90vh;
+  background: linear-gradient(160deg, #1a1005 0%, #0f0a02 100%);
+  border: 1px solid rgba(201,168,76,0.25);
+  box-shadow: 0 0 80px rgba(0,0,0,0.9), 0 0 40px rgba(201,168,76,0.08), inset 0 0 40px rgba(0,0,0,0.5);
   display: flex;
-  align-items: center;
-  gap: 20px;
-  /* Parchment bg behind the book image so multiply blend shows parchment, not black */
-  background: transparent;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
 }
+.book-overlay.open .book-panel-modal { transform: translateY(0) scale(1); }
+
+/* corner marks */
+.book-panel-modal::before, .book-panel-modal::after {
+  content: ''; position: absolute;
+  width: 60px; height: 60px; pointer-events: none; z-index: 10;
+}
+.book-panel-modal::before {
+  top: -1px; left: -1px;
+  border-top: 2px solid var(--gold-dim);
+  border-left: 2px solid var(--gold-dim);
+  opacity: .5;
+}
+.book-panel-modal::after {
+  bottom: -1px; right: -1px;
+  border-bottom: 2px solid var(--gold-dim);
+  border-right: 2px solid var(--gold-dim);
+  opacity: .5;
+}
+
 .book-close {
   position: absolute;
-  top: 20px; right: -18px;
-  z-index: 10;
+  top: 16px; right: 16px;
+  z-index: 3100;
   width: 38px; height: 38px;
   border-radius: 50%;
-  background: rgba(13,10,5,0.9);
-  border: 1px solid var(--gold-dim);
+  background: rgba(13,10,5,0.95);
+  border: 1px solid var(--gold);
   color: var(--gold);
   font-size: 1.1rem;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  transition: background .2s, border-color .2s, transform .2s;
   font-family: 'Cinzel', serif;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.6);
 }
-.book-close:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); transform: rotate(90deg) scale(1.1); }
-.book-arrow {
+.book-close:hover { background: rgba(201,168,76,0.2); border-color: var(--gold-light); transform: rotate(90deg) scale(1.1); }
+
+/* ── PANEL HEADER ── */
+.bpm-header {
+  display: flex; align-items: center; gap: 16px;
+  padding: 22px 64px 16px 24px;
+  border-bottom: 1px solid rgba(201,168,76,0.15);
   flex-shrink: 0;
-  width: 46px; height: 46px;
+}
+.bpm-header-icon {
+  font-size: 2rem; flex-shrink: 0;
+  filter: sepia(1) saturate(2) hue-rotate(5deg);
+}
+.bpm-header-titles { flex: 1; min-width: 0; }
+.bpm-category {
+  font-family: 'Cinzel', serif; font-size: .68rem;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 3px;
+}
+.bpm-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.1rem, 3vw, 1.7rem);
+  font-weight: 700; color: var(--gold-light);
+  line-height: 1.15;
+}
+.bpm-page-num {
+  font-family: 'Cinzel', serif;
+  font-size: .72rem; letter-spacing: 3px;
+  color: var(--gold-dim); flex-shrink: 0;
+  opacity: .75;
+}
+
+.bpm-divider-line {
+  height: 1px; flex-shrink: 0;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.2), transparent);
+}
+
+/* ── PANEL BODY ── */
+.bpm-body {
+  display: flex; gap: 0;
+  flex: 1; overflow: hidden;
+  min-height: 0;
+}
+.bpm-col {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.bpm-col::-webkit-scrollbar { width: 5px; }
+.bpm-col::-webkit-scrollbar-track { background: transparent; }
+.bpm-col::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+.bpm-col-sep {
+  width: 1px; flex-shrink: 0;
+  background: linear-gradient(180deg, transparent, rgba(201,168,76,0.18), transparent);
+}
+
+/* Left column styles */
+.bpm-col-left .left-page-label {
+  font-family: 'Cinzel', serif;
+  font-size: .68rem; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold-dim);
+  opacity: .8;
+}
+.bpm-col-left .left-page-heading {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(.95rem, 2vw, 1.2rem);
+  font-weight: 700; color: var(--gold-light); line-height: 1.3;
+}
+.bpm-col-left .left-divider {
+  width: 50%; height: 1px;
+  background: linear-gradient(90deg, var(--gold-dim), transparent);
+  opacity: .4;
+}
+.bpm-col-left .left-page-body {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(.9rem, 1.6vw, 1.02rem);
+  color: rgba(245,237,214,0.82); line-height: 1.7;
+}
+.bpm-col-left .left-page-body p { margin-bottom: 8px; }
+
+/* Right column styles */
+.bpm-col-right .page-chapter {
+  font-family: 'Cinzel', serif;
+  font-size: .7rem; font-weight: 700;
+  color: var(--gold); letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.bpm-col-right .page-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1rem, 2.2vw, 1.3rem);
+  font-weight: 700; color: var(--gold-light); line-height: 1.3;
+}
+.bpm-col-right .page-divider {
+  width: 80%; height: 1px;
+  background: linear-gradient(90deg, var(--gold-dim), transparent);
+  opacity: .45;
+}
+.bpm-col-right .page-body {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(.9rem, 1.6vw, 1.02rem);
+  color: rgba(245,237,214,0.82); line-height: 1.7;
+}
+.bpm-col-right .page-body p { margin-bottom: 8px; }
+.bpm-col-right .page-body p:last-child { margin-bottom: 0; }
+.bpm-col-right .page-body strong { color: var(--gold-light); font-weight: 600; }
+
+/* fade transition */
+.bpm-col { transition: opacity 0.3s ease; }
+.bpm-col.fade-out { opacity: 0; }
+
+/* ── PANEL FOOTER (arrows) ── */
+.bpm-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  border-top: 1px solid rgba(201,168,76,0.12);
+  flex-shrink: 0;
+}
+.bpm-chapter {
+  font-family: 'Cinzel', serif;
+  font-size: .7rem; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold-dim);
+  text-align: center; flex: 1; opacity: .75;
+}
+
+.book-arrow {
+  width: 44px; height: 44px;
   border-radius: 50%;
   background: rgba(13,10,5,0.8);
   border: 1px solid var(--gold-dim);
   color: var(--gold);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: background 0.25s, border-color 0.25s, transform 0.2s;
-  user-select: none;
+  user-select: none; flex-shrink: 0;
 }
 .book-arrow:hover { background: rgba(201,168,76,0.15); border-color: var(--gold); transform: scale(1.12); }
 .book-arrow:active { transform: scale(0.95); }
-.book-arrow:disabled { opacity: 0.25; cursor: default; transform: none; }
+.book-arrow:disabled { opacity: 0.2; cursor: default; transform: none; }
 
-.book-container {
-  position: relative;
-  flex: 1;
-  aspect-ratio: 1.62 / 1;
-  min-height: 0;
-  /* Parchment background — multiply blend on the PNG makes black transparent */
-  background: #f5edd6;
-  border-radius: 4px;
-}
-.book-image {
-  width: 100%; height: 100%;
-  object-fit: contain;
-  display: block;
-  border-radius: 2px;
-  mix-blend-mode: multiply;
-  filter: drop-shadow(0 8px 40px rgba(0,0,0,0.5));
-}
-
-/* Left page overlay */
-.book-left-overlay {
-  position: absolute;
-  top: 8%; left: 12%;
-  width: 32%; height: 84%;
-  display: flex; flex-direction: column;
-  justify-content: flex-start;
-  padding: 4% 1% 1% 8%;
-  pointer-events: none;
-}
-.left-page-content {
-  opacity: 1;
-  transition: opacity 0.35s ease;
-  height: 100%;
-  display: flex; flex-direction: column;
-  gap: 20px;
-}
-.left-page-content.fade-out { opacity: 0; }
-.left-page-label {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(0.55rem, 0.85vw, 0.78rem);
-  color: var(--gold-dim);
-  letter-spacing: 3px; text-transform: uppercase; opacity: 0.75;
-}
-.left-page-heading {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(0.7rem, 1.15vw, 1.1rem);
-  color: var(--ink); font-weight: 700; line-height: 1.3;
-}
-.left-divider {
-  width: 40%; height: 1px;
-  background: linear-gradient(90deg, var(--gold-dim), transparent);
-  opacity: 0.4; margin: 2px 0;
-}
-.left-page-body {
-  font-family: 'EB Garamond', serif;
-  font-size: clamp(0.6rem, 0.9vw, 0.88rem);
-  color: var(--ink-mid); line-height: 1.65;
-}
-.left-page-body p { margin-bottom: 5px; }
-
-/* Right page overlay */
-.book-text-overlay {
-  position: absolute;
-  top: 7.5%; right: 15%;
-  width: 35%; height: 84%;
-  display: flex; flex-direction: column;
-  justify-content: flex-start;
-  padding: 4% 2% 4% 3%;
-  pointer-events: none;
-}
-.book-page-content {
-  opacity: 1;
-  transition: opacity 0.35s ease;
-  height: 100%;
-  overflow: hidden;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.book-page-content.fade-out { opacity: 0; }
-.page-chapter {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(0.65rem, 1.1vw, 1rem);
-  font-weight: 700; color: var(--gold);
-  letter-spacing: 3px; text-transform: uppercase;
-  margin-bottom: 2px; line-height: 1.3;
-}
-.page-title {
-  font-family: 'Cinzel Decorative', serif;
-  font-size: clamp(0.75rem, 1.3vw, 1.2rem);
-  font-weight: 700; color: var(--ink);
-  line-height: 1.3; margin-bottom: 6px;
-}
-.page-divider {
-  width: 90%; height: 1px;
-  background: linear-gradient(90deg, var(--gold-dim), transparent);
-  opacity: 0.5; margin-bottom: 6px;
-}
-.page-body {
-  font-family: 'EB Garamond', serif;
-  font-size: clamp(0.62rem, 0.95vw, 0.9rem);
-  color: var(--ink-mid); line-height: 1.6; flex: 1; overflow: hidden;
-}
-.page-body p { margin-bottom: 6px; }
-.page-body p:last-child { margin-bottom: 0; }
-.page-body strong { color: var(--ink); font-weight: 700; }
-.page-footer {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(0.55rem, 0.8vw, 0.75rem);
-  color: var(--gold-dim); letter-spacing: 2px;
-  text-align: center; margin-top: auto; padding-top: 4px; opacity: 0.7;
-}
-.page-number-badge {
-  position: absolute;
-  bottom: 6%; left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Cinzel', serif;
-  font-size: clamp(0.52rem, 0.75vw, 0.7rem);
-  color: var(--gold-dim); letter-spacing: 3px;
-  pointer-events: none;
+/* ── RESPONSIVE: mobile stacks to single column ── */
+@media(max-width: 600px) {
+  .bpm-body { flex-direction: column; overflow-y: auto; }
+  .bpm-col { overflow-y: visible; padding: 18px 20px 8px; }
+  .bpm-col-sep { width: 80%; height: 1px; align-self: center;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.18), transparent); }
+  .bpm-header { padding: 18px 52px 14px 18px; }
 }
 </style>
 </head>
@@ -628,20 +669,35 @@ footer {
 
 <!-- BOOK MODAL -->
 <div class="book-overlay" id="bookOverlay">
-  <div class="book-modal">
+  <div class="book-panel-modal">
     <button class="book-close" id="bookClose">✕</button>
-    <button class="book-arrow" id="bookPrev">‹</button>
-    <div class="book-container">
-      <img src="images/adventurer-notes.png" alt="Open Book" class="book-image">
-      <div class="book-left-overlay">
-        <div class="left-page-content" id="leftPageContent"></div>
+
+    <!-- Header -->
+    <div class="bpm-header">
+      <div class="bpm-header-icon">📖</div>
+      <div class="bpm-header-titles">
+        <div class="bpm-category">ADVENTURER'S HANDBOOK</div>
+        <div class="bpm-title" id="bpmTitle">Welcome</div>
       </div>
-      <div class="book-text-overlay">
-        <div class="book-page-content" id="rightPageContent"></div>
-      </div>
-      <div class="page-number-badge" id="pageNumberBadge">— I —</div>
+      <div class="bpm-page-num" id="pageNumberBadge">— I —</div>
     </div>
-    <button class="book-arrow" id="bookNext">›</button>
+
+    <!-- Divider -->
+    <div class="bpm-divider-line"></div>
+
+    <!-- Body: two columns on desktop, single on mobile -->
+    <div class="bpm-body" id="bpmBody">
+      <div class="bpm-col bpm-col-left" id="leftPageContent"></div>
+      <div class="bpm-col-sep"></div>
+      <div class="bpm-col bpm-col-right" id="rightPageContent"></div>
+    </div>
+
+    <!-- Footer nav -->
+    <div class="bpm-footer">
+      <button class="book-arrow" id="bookPrev">‹</button>
+      <div class="bpm-chapter" id="bpmChapter"></div>
+      <button class="book-arrow" id="bookNext">›</button>
+    </div>
   </div>
 </div>
 
@@ -675,7 +731,7 @@ const KINGDOMS = [
       { label: "Currency", value: "Gold / Silver / Copper" }
     ],
     overview: "Valencrest rises from the continent's centre — the bridge for all kingdoms, founded by First High King Vael Dawnmere over four thousand years ago. Its borders are never closed. It draws adventurers from every corner of the world, offering the Adventurer's Guild, the Vale Academy, and a tavern that never runs dry of stories.",
-    government: "Monarchy under King Lysandros III: A genuinely beloved ruler who has spent 30 years loosening guild restrictions and expanding adventuring opportunities for common people.",
+    government: "Monarchy under King Lysandros III — a genuinely beloved ruler who has spent 30 years loosening guild restrictions and expanding adventuring opportunities for common people.",
     borderPolicy: "OPEN — Valencrest never closes its borders. Any individual from any kingdom may enter, reside, and build a life here without judgment.",
     races: "Humans (majority), with significant populations of every race due to the open-border policy. The most ethnically diverse kingdom in the known world.",
     magic: "Home to Valen Academy, the greatest magical institution in the known world. Five towers, each dedicated to a distinct school of magic. Widely practiced but regulated.",
@@ -712,8 +768,8 @@ const KINGDOMS = [
       { label: "Magic", value: "Overwhelming" },
       { label: "Currency", value: "Nature Barter/Trade" }
     ],
-    overview: "The Eldergrove has stood longer than recorded history, a living library older than any written record. Ancient trees wider than castles house entire elven city-districts in their canopy. The forest hums with living magic, and every leaf whispers in forgotten languages. It is the accumulation of everything Aetherion has ever known, stored in root and bark and mycelium.",
-    government: "Ancient Monarchy under Ellisar Venfir: An immortal who merged with the forest over two millennia ago. His physical vessel is Ithan Heidan, the 90th branch-manifestation, who serves as public sovereign.",
+    overview: "The Eldergrove has stood longer than recorded history — a living library older than any written record. Ancient trees wider than castles house entire elven city-districts in their canopy. The forest hums with living magic, and every leaf whispers in forgotten languages. It is the accumulation of everything Aetherion has ever known, stored in root and bark and mycelium.",
+    government: "Ancient Monarchy under Ellisar Venfir — an immortal who merged with the forest over two millennia ago. His physical vessel is Ithan Heidan, the 90th branch-manifestation, who serves as public sovereign.",
     borderPolicy: "REGULATED — Entry permitted to scholars, diplomats, and those with demonstrated respect. The Grove itself decides who is welcomed. Those who are unwelcome simply find every path leading back out.",
     races: "Ancient Elves (ruling class). Also hosts a significant Myconid presence beneath the root network — sentient mushroom-beings with collective memory spanning millennia.",
     magic: "Overwhelming — nature magic at its absolute peak. Time moves differently inside the Sanctum. Wounds heal faster. The air tastes of honey and lightning.",
@@ -1526,6 +1582,8 @@ const BOOK_PAGES = [
   const leftEl    = document.getElementById('leftPageContent');
   const rightEl   = document.getElementById('rightPageContent');
   const pageNumEl = document.getElementById('pageNumberBadge');
+  const titleEl   = document.getElementById('bpmTitle');
+  const chapterEl = document.getElementById('bpmChapter');
   const tooltip   = document.getElementById('bookTooltip');
 
   const ROMAN = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
@@ -1537,6 +1595,8 @@ const BOOK_PAGES = [
     prevBtn.disabled = index === 0;
     nextBtn.disabled = index === BOOK_PAGES.length - 1;
     pageNumEl.textContent = `— ${ROMAN[index] || index + 1} —`;
+    if (titleEl)   titleEl.textContent   = p.title    || p.leftHeading || '';
+    if (chapterEl) chapterEl.textContent = p.chapter  || '';
     leftEl.innerHTML = `
       <div class="left-page-label">${p.leftLabel || ''}</div>
       <div class="left-page-heading">${p.leftHeading || ''}</div>
@@ -1563,7 +1623,7 @@ const BOOK_PAGES = [
       leftEl.classList.remove('fade-out');
       rightEl.classList.remove('fade-out');
       transitioning = false;
-    }, 350);
+    }, 300);
   }
 
   function openBook() {
